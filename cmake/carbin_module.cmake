@@ -8,6 +8,10 @@ include(carbin_pkg_dump)
 
 CARBIN_ENSURE_OUT_OF_SOURCE_BUILD("must out of source dir")
 
+if (${CMAKE_PROJECT_VERSION} MATCHES "0.0.0")
+    carbin_error("CMAKE_PROJECT_VERSION must be set in file project_profile")
+endif()
+
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG(${CARBIN_STD} COMPILER_SUPPORTS_CARBIN_STD)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
