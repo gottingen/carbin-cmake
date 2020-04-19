@@ -13,3 +13,4 @@ _deps
 build
 .idea
 cmake-build-debug
+carbin
