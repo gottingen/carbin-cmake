@@ -52,6 +52,21 @@ if (NOT DEV_MODE AND ${PROJECT_NAME} MATCHES "carbin")
     carbin_error("project name must be set to your project name")
 endif ()
 
+#########################
+# default pavkage
+
+find_package(gtest REQUIRED)
+find_package(benchmark REQUIRED)
+find_package(gmock REQUIRED)
+
+carbin_check_target(gtest::gtest)
+carbin_check_target(gtest::gtest_main)
+carbin_check_target(benchmark::benchmark_main)
+carbin_check_target(benchmark::benchmark)
+carbin_check_target(gmock::gmock)
+carbin_check_target(gmock::gmock_main)
+
+
 #TODO do add you own subdirs
 carbin_directory_list(sub_modules "${CMAKE_CURRENT_SOURCE_DIR}/src")
 

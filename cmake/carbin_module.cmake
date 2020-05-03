@@ -22,7 +22,6 @@ carbin_include("${CARBIN_PREFIX}/${CARBIN_INSTALL_INCLUDEDIR}")
 carbin_include("${PROJECT_BINARY_DIR}")
 carbin_include("${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/src")
 
-carbin_print("1111")
 MACRO(directory_list result curdir)
     FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
     SET(dirlist "")
@@ -56,7 +55,3 @@ CARBIN_ENSURE_OUT_OF_SOURCE_BUILD("must out of source dir")
 set(CMAKE_CXX_FLAGS_DEBUG "-g3 -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 
-carbin_raw("---------------------------")
-carbin_print_label("CXX STANDARY" ${CARBIN_CXX_STANDARD})
-
-carbin_raw("---------------------------")
