@@ -84,7 +84,9 @@ function(carbin_cc_binary)
         carbin_raw("-----------------------------------")
     endif()
     add_executable( ${CARBIN_CC_BINARY_NAME} ${CARBIN_CC_BINARY_SOURCES} )
-    target_link_libraries( ${CARBIN_CC_BINARY_NAME} PUBLIC ${CARBIN_CC_BINARY_PUBLIC_LINKED_TARGETS} )
+    target_link_libraries(${CARBIN_CC_BINARY_NAME}
+            PUBLIC ${CARBIN_CC_BINARY_PUBLIC_LINKED_TARGETS}
+            PRIVATE ${CARBIN_CC_BINARY_PRIVATE_LINKED_TARGETS})
 
 
 
@@ -101,7 +103,6 @@ function(carbin_cc_binary)
             PRIVATE
             ${CARBIN_CC_BINARY_PRIVATE_DEFINITIONS}
             )
-
     target_compile_features(${CARBIN_CC_BINARY_NAME} PUBLIC ${CARBIN_CC_BINARY_PUBLIC_COMPILE_FEATURES} )
     target_compile_features(${CARBIN_CC_BINARY_NAME} PRIVATE ${CARBIN_CC_BINARY_PRIVATE_COMPILE_FEATURES} )
 
