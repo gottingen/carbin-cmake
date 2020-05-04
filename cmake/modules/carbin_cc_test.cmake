@@ -23,6 +23,8 @@ function(carbin_cc_test)
             PRIVATE_INCLUDE_PATHS
             PUBLIC_COMPILE_FEATURES
             PRIVATE_COMPILE_FEATURES
+            PRIVATE_COMPILE_OPTIONS
+            PUBLIC_COMPILE_OPTIONS
             )
 
     cmake_parse_arguments(
@@ -72,6 +74,8 @@ function(carbin_cc_test)
             ${CARBIN_CC_TEST_PUBLIC_INCLUDE_PATHS}
             ${CARBIN_CC_TEST_PRIVATE_INCLUDE_PATHS}
             )
+    target_compile_options(${CARBIN_CC_TEST_NAME} PUBLIC ${CARBIN_CC_TEST_PUBLIC_COMPILE_OPTIONS} )
+    target_compile_options(${CARBIN_CC_TEST_NAME} PRIVATE ${CARBIN_CC_TEST_PRIVATE_COMPILE_OPTIONS} )
 
     target_link_libraries(${testcase} ${CARBIN_CC_TEST_PUBLIC_LINKED_TARGETS} ${CARBIN_CC_TEST_PRIVATE_LINKED_TARGETS})
     #target_link_libraries(${testcase} --coverage -g -O0 -fprofile-arcs -ftest-coverage)
@@ -79,6 +83,9 @@ function(carbin_cc_test)
 
     #MESSAGE("         Adding link libraries for ${testcase}: ${GNL_LIBS}  ${GNL_COVERAGE_FLAGS} ")
 
+    if (NOT CARBIN_CC_TEST_COMMAND)
+        set(CARBIN_CC_TEST_COMMAND ${testcase})
+    endif ()
     add_test(NAME ${testcase}
             COMMAND ${CARBIN_CC_TEST_COMMAND}
             WORKING_DIRECTORY ${CARBIN_CC_TEST_WORKING_DIRECTORY})

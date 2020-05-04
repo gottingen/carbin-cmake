@@ -7,7 +7,8 @@ include(carbin_print_list)
 
 function(carbin_cc_benchmark)
     set(options
-            VERBOSE)
+            VERBOSE
+            )
     set(args NAME
             WORKING_DIRECTORY
             )
@@ -23,6 +24,8 @@ function(carbin_cc_benchmark)
             PRIVATE_INCLUDE_PATHS
             PUBLIC_COMPILE_FEATURES
             PRIVATE_COMPILE_FEATURES
+            PRIVATE_COMPILE_OPTIONS
+            PUBLIC_COMPILE_OPTIONS
             )
 
     cmake_parse_arguments(
@@ -35,7 +38,7 @@ function(carbin_cc_benchmark)
 
     if (CARBIN_CC_BENCHMARK_VERBOSE)
         carbin_raw("-----------------------------------")
-        carbin_print_label("Building Test", "${CARBIN_CC_BENCHMARK_NAME}")
+        carbin_print_label("Building Test" "${CARBIN_CC_BENCHMARK_NAME}")
         carbin_raw("-----------------------------------")
         carbin_print_label("Command to Execute" "${CARBIN_CC_BENCHMARK_COMMAND}")
         carbin_print_label("Working Directory" "${CARBIN_CC_BENCHMARK_WORKING_DIRECTORY}")
@@ -71,6 +74,10 @@ function(carbin_cc_benchmark)
             ${CARBIN_CC_BENCHMARK_PUBLIC_INCLUDE_PATHS}
             ${CARBIN_CC_BENCHMARK_PRIVATE_INCLUDE_PATHS}
             )
+
+    target_compile_options(${CARBIN_CC_BENCHMARK_NAME} PUBLIC ${CARBIN_CC_BENCHMARK_PUBLIC_COMPILE_OPTIONS} )
+    target_compile_options(${CARBIN_CC_BENCHMARK_NAME} PRIVATE ${CARBIN_CC_BENCHMARK_PRIVATE_COMPILE_OPTIONS} )
+
 
     target_link_libraries(${testcase} ${CARBIN_CC_BENCHMARK_PUBLIC_LINKED_TARGETS} ${CARBIN_CC_BENCHMARK_PRIVATE_LINKED_TARGETS})
     #target_link_libraries(${testcase} --coverage -g -O0 -fprofile-arcs -ftest-coverage)
