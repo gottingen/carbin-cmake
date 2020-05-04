@@ -6,7 +6,8 @@ include(carbin_install_dirs)
 include(carbin_print_list)
 
 function(carbin_cc_benchmark)
-    set(options)
+    set(options
+            VERBOSE)
     set(args NAME
             WORKING_DIRECTORY
             )
@@ -32,25 +33,25 @@ function(carbin_cc_benchmark)
             "${list_args}"
     )
 
+    if (CARBIN_CC_BENCHMARK_VERBOSE)
+        carbin_raw("-----------------------------------")
+        carbin_print_label("Building Test", "${CARBIN_CC_BENCHMARK_NAME}")
+        carbin_raw("-----------------------------------")
+        carbin_print_label("Command to Execute" "${CARBIN_CC_BENCHMARK_COMMAND}")
+        carbin_print_label("Working Directory" "${CARBIN_CC_BENCHMARK_WORKING_DIRECTORY}")
+        carbin_print_list_label("Sources" CARBIN_CC_BENCHMARK_SOURCES)
+        carbin_print_list_label("Public Linked Targest" CARBIN_CC_BENCHMARK_PUBLIC_LINKED_TARGETS)
+        carbin_print_list_label("Private Linked Targest" CARBIN_CC_BENCHMARK_PRIVATE_LINKED_TARGETS)
+        carbin_print_list_label("Public Include Paths" CARBIN_CC_BENCHMARK_PUBLIC_INCLUDE_PATHS)
+        carbin_print_list_label("Private Include Paths" CARBIN_CC_BENCHMARK_PRIVATE_INCLUDE_PATHS)
+        carbin_print_list_label("Public Compile Features" CARBIN_CC_BENCHMARK_PUBLIC_COMPILE_FEATURES)
+        carbin_print_list_label("Private Compile Features" CARBIN_CC_BENCHMARK_PRIVATE_COMPILE_FEATURES)
+        carbin_print_list_label("Public Definitions" CARBIN_CC_BENCHMARK_PUBLIC_DEFINITIONS)
+        carbin_print_list_label("Private Definitions" CARBIN_CC_BENCHMARK_PRIVATE_DEFINITIONS)
+        carbin_raw("-----------------------------------")
+    endif ()
 
-    message("-----------------------------------")
-    message("Building Test:        ${CARBIN_CC_BENCHMARK_NAME} ")
-    message("-----------------------------------")
-    message("Command to Execute: ${CARBIN_CC_BENCHMARK_COMMAND}")
-    message("Working Directory : ${CARBIN_CC_BENCHMARK_WORKING_DIRECTORY}")
-    carbin_print_list_label("Sources" CARBIN_CC_BENCHMARK_SOURCES)
-    carbin_print_list_label("Public Linked Targest"  CARBIN_CC_BENCHMARK_PUBLIC_LINKED_TARGETS)
-    carbin_print_list_label("Private Linked Targest"  CARBIN_CC_BENCHMARK_PRIVATE_LINKED_TARGETS)
-    carbin_print_list_label("Public Include Paths"  CARBIN_CC_BENCHMARK_PUBLIC_INCLUDE_PATHS)
-    carbin_print_list_label("Private Include Paths" CARBIN_CC_BENCHMARK_PRIVATE_INCLUDE_PATHS)
-    carbin_print_list_label("Public Compile Features" CARBIN_CC_BENCHMARK_PUBLIC_COMPILE_FEATURES)
-    carbin_print_list_label("Private Compile Features" CARBIN_CC_BENCHMARK_PRIVATE_COMPILE_FEATURES)
-    carbin_print_list_label("Public Definitions" CARBIN_CC_BENCHMARK_PUBLIC_DEFINITIONS)
-    carbin_print_list_label("Private Definitions" CARBIN_CC_BENCHMARK_PRIVATE_DEFINITIONS)
-    message("-----------------------------------")
-
-
-    set(testcase ${CARBIN_CC_BENCHMARK_NAME} )
+    set(testcase ${CARBIN_CC_BENCHMARK_NAME})
 
     add_executable(${testcase} ${CARBIN_CC_BENCHMARK_SOURCES})
     target_compile_definitions(${testcase} PRIVATE
@@ -71,7 +72,7 @@ function(carbin_cc_benchmark)
             ${CARBIN_CC_BENCHMARK_PRIVATE_INCLUDE_PATHS}
             )
 
-    target_link_libraries(${testcase} ${CARBIN_CC_BENCHMARK_PUBLIC_LINKED_TARGETS} ${CARBIN_CC_BENCHMARK_PRIVATE_LINKED_TARGETS} )
+    target_link_libraries(${testcase} ${CARBIN_CC_BENCHMARK_PUBLIC_LINKED_TARGETS} ${CARBIN_CC_BENCHMARK_PRIVATE_LINKED_TARGETS})
     #target_link_libraries(${testcase} --coverage -g -O0 -fprofile-arcs -ftest-coverage)
     #target_compile_options(${testcase} PRIVATE --coverage -g -O0 -fprofile-arcs -ftest-coverage)
 

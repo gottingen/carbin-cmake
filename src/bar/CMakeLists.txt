@@ -11,6 +11,7 @@ carbin_cc_library(
         PRIVATE_LINKED_TARGETS
             Threads::Threads
         PUBLIC
+        VERBOSE
 )
 
 install(
@@ -44,4 +45,5 @@ install(
 carbin_cc_binary(
         NAME bar_main
         SOURCES bar_main.cc
+        VERBOSE
 )

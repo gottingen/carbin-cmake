@@ -80,6 +80,7 @@ function(carbin_cc_library)
     set(options
             PUBLIC
             SHARED
+            VERBOSE
             )
     set(args NAME
             NAMESPACE
@@ -109,67 +110,66 @@ function(carbin_cc_library)
     )
 
 
-    if("${CARBIN_CC_LIB_NAME}" STREQUAL "")
+    if ("${CARBIN_CC_LIB_NAME}" STREQUAL "")
         get_filename_component(CARBIN_CC_LIB_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
         string(REPLACE " " "_" CARBIN_CC_LIB_NAME ${CARBIN_CC_LIB_NAME})
         carbin_print(" Library, NAME argument not provided. Using folder name:  ${CARBIN_CC_LIB_NAME}")
-    endif()
+    endif ()
 
-    if("${CARBIN_CC_LIB_NAMESPACE}" STREQUAL "")
+    if ("${CARBIN_CC_LIB_NAMESPACE}" STREQUAL "")
         set(CARBIN_CC_LIB_NAMESPACE ${CARBIN_CC_LIB_NAME})
         message(" Library, NAMESPACE argument not provided. Using target alias:  ${CARBIN_CC_LIB_NAME}::${CARBIN_CC_LIB_NAME}")
-    endif()
-
-
-    message("-----------------------------------")
-    carbin_print_label("Create Library" "${CARBIN_CC_LIB_NAMESPACE}::${CARBIN_CC_LIB_NAME}")
-    message("-----------------------------------")
-    carbin_print_list_label("Sources" CARBIN_CC_LIB_SOURCES)
-    carbin_print_list_label("Public Linked Targest"  CARBIN_CC_LIB_PUBLIC_LINKED_TARGETS)
-    carbin_print_list_label("Private Linked Targest"  CARBIN_CC_LIB_PRIVATE_LINKED_TARGETS)
-    carbin_print_list_label("Public Include Paths"  CARBIN_CC_LIB_PUBLIC_INCLUDE_PATHS)
-    carbin_print_list_label("Private Include Paths" CARBIN_CC_LIB_PRIVATE_INCLUDE_PATHS)
-    carbin_print_list_label("Public Compile Features" CARBIN_CC_LIB_PUBLIC_COMPILE_FEATURES)
-    carbin_print_list_label("Private Compile Features" CARBIN_CC_LIB_PRIVATE_COMPILE_FEATURES)
-    carbin_print_list_label("Public Definitions" CARBIN_CC_LIB_PUBLIC_DEFINITIONS)
-    carbin_print_list_label("Private Definitions" CARBIN_CC_LIB_PRIVATE_DEFINITIONS)
-    if (CARBIN_CC_LIB_PUBLIC)
-        carbin_print_label("Public" "true")
-    else ()
-        carbin_print_label("Public" "false")
-    endif ()
-    if (CARBIN_CC_LIB_SHARED)
-        set(CARBIN_BUILD_TYPE "SHARED")
-        carbin_print_label("Shared" "true")
-    else ()
-        set(CARBIN_BUILD_TYPE "STATIC")
-        carbin_print_label("Shared" "false")
     endif ()
 
     if ("${CARBIN_CC_LIB_SOURCES}" STREQUAL "")
-        carbin_print_label("Interface" "true")
-        set(CARBIN_CC_LIB_IS_INTERFACE 1)
+        set(CARBIN_CC_LIB_IS_INTERFACE true)
     else ()
-        carbin_print_label("Interface" "false")
-        set(CARBIN_CC_LIB_IS_INTERFACE 0)
+        set(CARBIN_CC_LIB_IS_INTERFACE false)
     endif ()
 
-    message("-----------------------------------")
+    if (CARBIN_CC_LIB_SHARED)
+        set(CARBIN_BUILD_TYPE "SHARED")
+    else ()
+        set(CARBIN_BUILD_TYPE "STATIC")
+    endif ()
 
+
+    carbin_raw("-----------------------------------")
+    carbin_print_label("Create Library" "${CARBIN_CC_LIB_NAMESPACE}::${CARBIN_CC_LIB_NAME}")
+    carbin_raw("-----------------------------------")
+    if (CARBIN_CC_LIB_VERBOSE)
+        carbin_print_list_label("Sources" CARBIN_CC_LIB_SOURCES)
+        carbin_print_list_label("Public Linked Targest" CARBIN_CC_LIB_PUBLIC_LINKED_TARGETS)
+        carbin_print_list_label("Private Linked Targest" CARBIN_CC_LIB_PRIVATE_LINKED_TARGETS)
+        carbin_print_list_label("Public Include Paths" CARBIN_CC_LIB_PUBLIC_INCLUDE_PATHS)
+        carbin_print_list_label("Private Include Paths" CARBIN_CC_LIB_PRIVATE_INCLUDE_PATHS)
+        carbin_print_list_label("Public Compile Features" CARBIN_CC_LIB_PUBLIC_COMPILE_FEATURES)
+        carbin_print_list_label("Private Compile Features" CARBIN_CC_LIB_PRIVATE_COMPILE_FEATURES)
+        carbin_print_list_label("Public Definitions" CARBIN_CC_LIB_PUBLIC_DEFINITIONS)
+        carbin_print_list_label("Private Definitions" CARBIN_CC_LIB_PRIVATE_DEFINITIONS)
+        if (CARBIN_CC_LIB_PUBLIC)
+            carbin_print_label("Public" "true")
+        else ()
+            carbin_print_label("Public" "false")
+        endif ()
+        carbin_print_label("Libaray type" ${CARBIN_BUILD_TYPE})
+        carbin_print_label("Interface" ${CARBIN_CC_LIB_IS_INTERFACE})
+        carbin_raw("-----------------------------------")
+    endif ()
     if (NOT CARBIN_CC_LIB_IS_INTERFACE)
-        add_library( ${CARBIN_CC_LIB_NAME} ${CARBIN_BUILD_TYPE} ${CARBIN_CC_LIB_SOURCES} ${CARBIN_CC_LIB_HEADERS})
-        add_library( ${CARBIN_CC_LIB_NAMESPACE}::${CARBIN_CC_LIB_NAME}  ALIAS  ${CARBIN_CC_LIB_NAME}   )
+        add_library(${CARBIN_CC_LIB_NAME} ${CARBIN_BUILD_TYPE} ${CARBIN_CC_LIB_SOURCES} ${CARBIN_CC_LIB_HEADERS})
+        add_library(${CARBIN_CC_LIB_NAMESPACE}::${CARBIN_CC_LIB_NAME} ALIAS ${CARBIN_CC_LIB_NAME})
 
-        target_compile_features(${CARBIN_CC_LIB_NAME} PUBLIC ${CARBIN_CC_LIB_PUBLIC_COMPILE_FEATURES} )
-        target_compile_features(${CARBIN_CC_LIB_NAME} PRIVATE ${CARBIN_CC_LIB_PRIVATE_COMPILE_FEATURES} )
+        target_compile_features(${CARBIN_CC_LIB_NAME} PUBLIC ${CARBIN_CC_LIB_PUBLIC_COMPILE_FEATURES})
+        target_compile_features(${CARBIN_CC_LIB_NAME} PRIVATE ${CARBIN_CC_LIB_PRIVATE_COMPILE_FEATURES})
 
-        target_compile_options(${CARBIN_CC_LIB_NAME} PUBLIC ${CARBIN_CC_LIB_PUBLIC_COMPILE_OPTIONS} )
-        target_compile_options(${CARBIN_CC_LIB_NAME} PRIVATE ${CARBIN_CC_LIB_PRIVATE_COMPILE_OPTIONS} )
+        target_compile_options(${CARBIN_CC_LIB_NAME} PUBLIC ${CARBIN_CC_LIB_PUBLIC_COMPILE_OPTIONS})
+        target_compile_options(${CARBIN_CC_LIB_NAME} PRIVATE ${CARBIN_CC_LIB_PRIVATE_COMPILE_OPTIONS})
 
-        target_link_libraries( ${CARBIN_CC_LIB_NAME} PUBLIC ${CARBIN_CC_LIB_PUBLIC_LINKED_TARGETS})
-        target_link_libraries( ${CARBIN_CC_LIB_NAME} PRIVATE ${CARBIN_CC_LIB_PRIVATE_LINKED_TARGETS})
+        target_link_libraries(${CARBIN_CC_LIB_NAME} PUBLIC ${CARBIN_CC_LIB_PUBLIC_LINKED_TARGETS})
+        target_link_libraries(${CARBIN_CC_LIB_NAME} PRIVATE ${CARBIN_CC_LIB_PRIVATE_LINKED_TARGETS})
 
-        target_include_directories( ${CARBIN_CC_LIB_NAME}
+        target_include_directories(${CARBIN_CC_LIB_NAME}
                 PUBLIC
                 ${CARBIN_CC_LIB_INCLUDE_PATHS}
                 ${CARBIN_CC_LIB_PUBLIC_INCLUDE_PATHS}
@@ -177,27 +177,27 @@ function(carbin_cc_library)
                 ${CARBIN_CC_LIB_PRIVATE_INCLUDE_PATHS}
                 )
 
-        target_compile_definitions( ${CARBIN_CC_LIB_NAME}
+        target_compile_definitions(${CARBIN_CC_LIB_NAME}
                 PUBLIC
                 ${CARBIN_CC_LIB_PUBLIC_DEFINITIONS}
                 PRIVATE
                 ${CARBIN_CC_LIB_PRIVATE_DEFINITIONS}
                 )
-    else()
-        add_library( ${CARBIN_CC_LIB_NAME} INTERFACE)
-        add_library( ${CARBIN_CC_LIB_NAMESPACE}::${CARBIN_CC_LIB_NAME}  ALIAS  ${CARBIN_CC_LIB_NAME})
-        target_compile_features(${CARBIN_CC_LIB_NAME} INTERFACE ${CARBIN_CC_LIB_PUBLIC_COMPILE_FEATURES} )
-        target_compile_features(${CARBIN_CC_LIB_NAME} INTERFACE ${CARBIN_CC_LIB_PRIVATE_COMPILE_FEATURES} )
+    else ()
+        add_library(${CARBIN_CC_LIB_NAME} INTERFACE)
+        add_library(${CARBIN_CC_LIB_NAMESPACE}::${CARBIN_CC_LIB_NAME} ALIAS ${CARBIN_CC_LIB_NAME})
+        target_compile_features(${CARBIN_CC_LIB_NAME} INTERFACE ${CARBIN_CC_LIB_PUBLIC_COMPILE_FEATURES})
+        target_compile_features(${CARBIN_CC_LIB_NAME} INTERFACE ${CARBIN_CC_LIB_PRIVATE_COMPILE_FEATURES})
 
-        target_compile_options(${CARBIN_CC_LIB_NAME} INTERFACE ${CARBIN_CC_LIB_PUBLIC_COMPILE_OPTIONS} )
-        target_compile_options(${CARBIN_CC_LIB_NAME} INTERFACE ${CARBIN_CC_LIB_PRIVATE_COMPILE_OPTIONS} )
+        target_compile_options(${CARBIN_CC_LIB_NAME} INTERFACE ${CARBIN_CC_LIB_PUBLIC_COMPILE_OPTIONS})
+        target_compile_options(${CARBIN_CC_LIB_NAME} INTERFACE ${CARBIN_CC_LIB_PRIVATE_COMPILE_OPTIONS})
 
-        target_link_libraries( ${CARBIN_CC_LIB_NAME} INTERFACE
+        target_link_libraries(${CARBIN_CC_LIB_NAME} INTERFACE
                 ${CARBIN_CC_LIB_PUBLIC_LINKED_TARGETS}
                 ${CARBIN_CC_LIB_PRIVATE_LINKED_TARGETS}
                 )
 
-        target_include_directories( ${CARBIN_CC_LIB_NAME}
+        target_include_directories(${CARBIN_CC_LIB_NAME}
                 INTERFACE
                 ${CARBIN_CC_LIB_INCLUDE_PATHS}
                 ${CARBIN_CC_LIB_PUBLIC_INCLUDE_PATHS}
@@ -206,7 +206,7 @@ function(carbin_cc_library)
 
         target_compile_definitions(${CARBIN_CC_LIB_NAME} INTERFACE ${CARBIN_CC_LIB_DEFINES})
 
-    endif()
+    endif ()
 
     if (CARBIN_CC_LIB_PUBLIC)
 
@@ -219,9 +219,9 @@ function(carbin_cc_library)
                 )
     endif ()
 
-    foreach(arg IN LISTS CARBIN_CC_LIB_UNPARSED_ARGUMENTS)
+    foreach (arg IN LISTS CARBIN_CC_LIB_UNPARSED_ARGUMENTS)
         message(WARNING "Unparsed argument: ${arg}")
-    endforeach()
+    endforeach ()
 
 endfunction()
 
