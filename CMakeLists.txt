@@ -17,7 +17,6 @@ set(CMAKE_MACOSX_RPATH 1)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 list(APPEND CMAKE_MODULE_PATH  ${PROJECT_SOURCE_DIR}/cmake/modules)
 list(APPEND CMAKE_MODULE_PATH  ${PROJECT_SOURCE_DIR}/cmake/recipes)
-list(APPEND CMAKE_MODULE_PATH  ${PROJECT_SOURCE_DIR}/cmake/find)
 list(APPEND CMAKE_MODULE_PATH  ${PROJECT_SOURCE_DIR}/cmake/recipes)
 
 include(carbin_print)
@@ -58,6 +57,9 @@ endif ()
 find_package(gtest REQUIRED)
 find_package(benchmark REQUIRED)
 find_package(gmock REQUIRED)
+find_package(gperftools)
+find_package(gflags)
+find_package(protobuf REQUIRED)
 
 carbin_check_target(gtest::gtest)
 carbin_check_target(gtest::gtest_main)
@@ -65,6 +67,9 @@ carbin_check_target(benchmark::benchmark_main)
 carbin_check_target(benchmark::benchmark)
 carbin_check_target(gmock::gmock)
 carbin_check_target(gmock::gmock_main)
+carbin_check_target(gperftools::tcmalloc)
+carbin_check_target(gperftools::profiler)
+carbin_check_target(gflags::gflags)
 
 
 #TODO do add you own subdirs
