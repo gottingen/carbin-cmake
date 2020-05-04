@@ -41,8 +41,12 @@ function(carbin_warn)
     message("")
 endfunction(carbin_warn)
 
+set(CARBIN_ALIGN_LENGTH 30)
 MACRO(carbin_print_label Label Value)
-    message("${carbin_yellow}${Label}${carbin_colour_reset}:          ${carbin_cyan}${Value}${carbin_colour_reset}")
+    string(LENGTH ${Label} lLength)
+    math(EXPR paddingLeng ${CARBIN_ALIGN_LENGTH}-${lLength})
+    string(REPEAT " "  ${paddingLeng} PADDING)
+    message("${carbin_yellow}${Label}${carbin_colour_reset}:${PADDING}${carbin_cyan}${Value}${carbin_colour_reset}")
 ENDMACRO()
 
 MACRO(carbin_raw Value)

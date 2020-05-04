@@ -15,9 +15,9 @@ cmake_policy(SET CMP0048 NEW)
 set(CMAKE_MACOSX_RPATH 1)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-list(APPEND CMAKE_MODULE_PATH  ${PROJECT_SOURCE_DIR}/cmake/modules)
-list(APPEND CMAKE_MODULE_PATH  ${PROJECT_SOURCE_DIR}/cmake/recipes)
-list(APPEND CMAKE_MODULE_PATH  ${PROJECT_SOURCE_DIR}/cmake/recipes)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/recipes)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/recipes)
 
 include(carbin_print)
 
@@ -37,6 +37,9 @@ option(ENABLE_TESTING "enable unit test" OFF)
 option(CARBIN_PACKAGE_GEN "enable package gen" ON)
 option(ENABLE_BENCHMARK "enable benchmark" OFF)
 option(ENABLE_EXAMPLE "enable benchmark" OFF)
+option(ENABLE_SUMMARY "enable summary output" ON)
+# it is too many
+option(ENABLE_SUMMARY_CXX_FLAG "enable cxx flags" OFF)
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(PACKAGE_INSTALL_PREFIX "/usr/local")
@@ -48,7 +51,9 @@ include(carbin_module)
 include(CMakePackageConfigHelpers)
 
 if (NOT DEV_MODE AND ${PROJECT_NAME} MATCHES "carbin")
-    carbin_error("project name must be set to your project name")
+    carbin_error("project name must be set to your project name \
+                  or define -DDEV_MODE=true set to develop modeeg: \n\
+                   cmake .. -DDEV_MODE=true")
 endif ()
 
 #########################
@@ -75,9 +80,9 @@ carbin_check_target(gflags::gflags)
 #TODO do add you own subdirs
 carbin_directory_list(sub_modules "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-FOREACH(subdir ${sub_modules})
+FOREACH (subdir ${sub_modules})
     add_subdirectory(src/${subdir})
-ENDFOREACH()
+ENDFOREACH ()
 # TODO end
 
 if (ENABLE_EXAMPLE)
@@ -111,7 +116,7 @@ include(GNUInstallDirs)
 #   * <prefix>/include/
 set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
-set(generated_dir                "${CMAKE_CURRENT_BINARY_DIR}/generated")
+set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
 # Configuration
 set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
@@ -146,7 +151,6 @@ configure_package_config_file(
 #  * headers can be included by C++ code `#include <foo/Bar.hpp>`
 
 
-
 # Config
 #   * <prefix>/lib/cmake/Foo/FooConfig.cmake
 #   * <prefix>/lib/cmake/Foo/FooConfigVersion.cmake
@@ -172,5 +176,6 @@ install(
 if (CARBIN_PACKAGE_GEN)
     include(carbin_package)
 endif ()
-
-include(carbin_summary)
+if (ENABLE_SUMMARY)
+    include(carbin_summary)
+endif ()

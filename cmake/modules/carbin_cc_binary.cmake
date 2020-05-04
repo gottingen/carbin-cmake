@@ -42,7 +42,8 @@
 ################################################################################
 
 function(carbin_cc_binary)
-    set(options)
+    set(options
+            VERBOSE)
     set(args NAME
             )
 
@@ -70,16 +71,18 @@ function(carbin_cc_binary)
     carbin_raw("-----------------------------------")
     carbin_print_label("Building Binary" "${CARBIN_CC_BINARY_NAME}")
     carbin_raw("-----------------------------------")
-    carbin_print_list_label("Sources" CARBIN_CC_BINARY_SOURCES)
-    carbin_print_list_label("Public Linked Targest"  CARBIN_CC_BINARY_PUBLIC_LINKED_TARGETS)
-    carbin_print_list_label("Private Linked Targest"  CARBIN_CC_BINARY_PRIVATE_LINKED_TARGETS)
-    carbin_print_list_label("Public Include Paths"  CARBIN_CC_BINARY_PUBLIC_INCLUDE_PATHS)
-    carbin_print_list_label("Private Include Paths" CARBIN_CC_BINARY_PRIVATE_INCLUDE_PATHS)
-    carbin_print_list_label("Public Compile Features" CARBIN_CC_BINARY_PUBLIC_COMPILE_FEATURES)
-    carbin_print_list_label("Private Compile Features" CARBIN_CC_BINARY_PRIVATE_COMPILE_FEATURES)
-    carbin_print_list_label("Public Definitions" CARBIN_CC_BINARY_PUBLIC_DEFINITIONS)
-    carbin_print_list_label("Private Definitions" CARBIN_CC_BINARY_PRIVATE_DEFINITIONS)
-    carbin_raw("-----------------------------------")
+    if(CARBIN_CC_BINARY_VERBOSE)
+        carbin_print_list_label("Sources" CARBIN_CC_BINARY_SOURCES)
+        carbin_print_list_label("Public Linked Targest"  CARBIN_CC_BINARY_PUBLIC_LINKED_TARGETS)
+        carbin_print_list_label("Private Linked Targest"  CARBIN_CC_BINARY_PRIVATE_LINKED_TARGETS)
+        carbin_print_list_label("Public Include Paths"  CARBIN_CC_BINARY_PUBLIC_INCLUDE_PATHS)
+        carbin_print_list_label("Private Include Paths" CARBIN_CC_BINARY_PRIVATE_INCLUDE_PATHS)
+        carbin_print_list_label("Public Compile Features" CARBIN_CC_BINARY_PUBLIC_COMPILE_FEATURES)
+        carbin_print_list_label("Private Compile Features" CARBIN_CC_BINARY_PRIVATE_COMPILE_FEATURES)
+        carbin_print_list_label("Public Definitions" CARBIN_CC_BINARY_PUBLIC_DEFINITIONS)
+        carbin_print_list_label("Private Definitions" CARBIN_CC_BINARY_PRIVATE_DEFINITIONS)
+        carbin_raw("-----------------------------------")
+    endif()
     add_executable( ${CARBIN_CC_BINARY_NAME} ${CARBIN_CC_BINARY_SOURCES} )
     target_link_libraries( ${CARBIN_CC_BINARY_NAME} PUBLIC ${CARBIN_CC_BINARY_PUBLIC_LINKED_TARGETS} )
 
